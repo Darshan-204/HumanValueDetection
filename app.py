@@ -160,12 +160,14 @@ def predict_text_or_csv(model_name, text_input, csv_file):
         logits = model(input_tensor)
         probs = torch.sigmoid(logits).cpu().numpy()
 
-    results = []
-    for i, text in enumerate(texts):
-        pred_labels = {LABEL_COLUMNS[j]: float(probs[i][j]) for j in range(len(LABEL_COLUMNS))}
-        results.append(pred_labels)
-
-    return results if csv_file else results[0]
+    if csv_file:
+        # ✅ Return average predictions across all rows
+        avg_probs = probs.mean(axis=0)
+        avg_labels = {LABEL_COLUMNS[j]: float(avg_probs[j]) for j in range(len(LABEL_COLUMNS))}
+        return avg_labels
+    else:
+        pred_labels = {LABEL_COLUMNS[j]: float(probs[0][j]) for j in range(len(LABEL_COLUMNS))}
+        return pred_labels
 
 # =====================
 # Gradio App
