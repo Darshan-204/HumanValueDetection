@@ -1,4 +1,4 @@
-title: Human Value
+Title: Human Value   
 emoji: 💻
 colorFrom: blue
 colorTo: yellow
